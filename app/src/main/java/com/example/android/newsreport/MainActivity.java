@@ -36,13 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
         lv = (ListView) findViewById(R.id.list_view);
 
-        ArrayList<String> array = new ArrayList<String>();
-        array.add("New 1");
-        array.add("New 2");
-        array.add("New 3");
+        ArrayList<Report> reports = new ArrayList<>();
+        reports.add(new Report("Debate", "1", "www.google.com"));
+        reports.add(new Report("Soccer", "2", "www.google.com"));
+        reports.add(new Report("Tech", "3", "www.google.com"));
+        reports.add(new Report("CS", "4", "www.google.com"));
+        reports.add(new Report("Saray", "5", "www.google.com"));
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        lv.setAdapter(arrayAdapter);
+        ReportAdapter adapter = new ReportAdapter(this, reports);
+        lv.setAdapter(adapter);
 
 
     }
