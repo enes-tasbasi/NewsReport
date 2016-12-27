@@ -39,4 +39,6 @@ public class ReportAdapter extends ArrayAdapter<Report>  {
 
         return listItemView;
     }
+
+
 }
