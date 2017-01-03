@@ -1,5 +1,7 @@
 package com.example.android.newsreport;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -25,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
             "ted\":false},{\"id\":\"football/2016/dec/20/liverpool-sadio-mane-africa-cup-of-nations-senegal\",\"type\":\"article\",\"sectionId\":\"football\",\"sectionName\":\"Football\",\"webPublicationDate\":\"2016-12-20T22:30:00Z\",\"webTitle\":\"Liverpool’s matchwinner Sadio Mané will head to Gabon with a heavy heart\",\"webUrl\":\"https://www.theguardian.com/football/2016/dec/20/liverpool-sadio-mane-africa-cup-of-nations-senegal\",\"apiUrl\":\"https://content.guardianapis.com/football/2016/dec/20/liverpool-sadio-mane-africa-cup-of-nations-senegal\",\"isHosted\":false},{\"id\":\"world/live/2016/dec/20/berlin-christmas-market-attack-suspect-pakistan-live-coverage\",\"type\":\"liveblog\",\"sectionId\":\"world\",\"sectionName\":\"World news\",\"webPublicationDate\":\"2016-12-20T22:23:01Z\",\"webTitle\":\"Berlin attack: first suspect released as driver thought to still be at large – live\",\"webUrl\":\"https://www.theguardian.com/world/live/2016/dec/20/berlin-christmas-market-attack-suspect-pakistan-live-coverage\",\"apiUrl\":\"https://content.guardianapis.com/world/live/2016/dec/20/berlin-christmas-market-attack-suspect-pakistan-live-coverage\",\"isHosted\":false},{\"id\":\"us-news/2016/dec/20/trumps-response-to-terror-attacks-risks-adding-confusion-to-dangerous-situation\",\"type\":\"article\",\"sectionId\":\"us-news\",\"sectionName\":\"US news\",\"webPublicationDate\":\"2016-12-20T22:16:21Z\",\"webTitle\":\"Trump's response to recent attacks risks adding confusion to dangerous situation\",\"webUrl\":\"https://www.theguardian.com/us-news/2016/dec/20/trumps-response-to-terror-attacks-risks-adding-confusion-to-dangerous-situation\",\"apiUrl\":\"https://content.guardianapis.com/us-news/2016/dec/20/trumps-re" +
             "sponse-to-terror-attacks-risks-adding-confusion-to-dangerous-situation\",\"isHosted\":false},{\"id\":\"football/2016/dec/20/celtic-partick-thistle-scottish-premiership-match-report\",\"type\":\"article\",\"sectionId\":\"football\",\"sectionName\":\"Football\",\"webPublicationDate\":\"2016-12-20T22:00:19Z\",\"webTitle\":\"Scott Sinclair fires Celtic 14 points clear with winner against Partick Thistle\",\"webUrl\":\"https://www.theguardian.com/football/2016/dec/20/celtic-partick-thistle-scottish-premiership-match-report\",\"apiUrl\":\"htt" +
             "ps://content.guardianapis.com/football/2016/dec/20/celtic-partick-thistle-scottish-premiership-match-report\",\"isHosted\":false}]}}";
+
+    private String urlRequest = "http://content.guardianapis.com/search?q=football&api-key=fc93e16d-0d30-42cf-a514-41b88adee69d";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +49,24 @@ public class MainActivity extends AppCompatActivity {
 
         lv = (ListView) findViewById(R.id.list_view);
 
-//        ArrayList<Report> reports = new ArrayList<>();
-//        reports.add(new Report("Debate", "1", "www.google.com"));
-//        reports.add(new Report("Soccer", "2", "www.google.com"));
-//        reports.add(new Report("Tech", "3", "www.google.com"));
-//        reports.add(new Report("CS", "4", "www.google.com"));
-//        reports.add(new Report("Saray", "5", "www.google.com"));
 
-        List<Report> reports = QueryUtils.extractFeatureFromJson(json);
+        List<Report> reports = QueryUtils.fetchReportData(urlRequest);
 
-        ReportAdapter adapter = new ReportAdapter(this, reports );
+        final ReportAdapter adapter = new ReportAdapter(this, reports );
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Report currentReport = adapter.getItem(position);
+
+                Uri reportUri = Uri.parse(currentReport.getUrl());
+
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, reportUri);
+
+                startActivity(websiteIntent);
+            }
+        });
 
 
     }
