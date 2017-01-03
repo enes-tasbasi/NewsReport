@@ -1,6 +1,8 @@
 package com.example.android.newsreport;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +19,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<List<Report>> {
 
     private ListView lv;
 
@@ -91,5 +94,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<List<Report>> onCreateLoader(int i, Bundle bundle) {
+
+        return new ReportLoader(this, urlRequest);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Report>> loader, List<Report> reports) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Report>> loader) {
+
     }
 }
