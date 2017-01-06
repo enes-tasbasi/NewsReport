@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity
 
     private String urlRequest = "http://content.guardianapis.com/search?q=football&api-key=fc93e16d-0d30-42cf-a514-41b88adee69d";
 
+    final ReportAdapter adapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,17 +100,23 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<List<Report>> onCreateLoader(int i, Bundle bundle) {
-
-        return new ReportLoader(this, urlRequest);
+        ReportLoader loader = new ReportLoader(this, urlRequest);
+        return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<List<Report>> loader, List<Report> reports) {
+        adapter.clear();
 
+        if(reports != null && !reports.isEmpty()) {
+            adapter.addAll(reports);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Report>> loader) {
+
+        adapter.clear();
 
     }
 }
