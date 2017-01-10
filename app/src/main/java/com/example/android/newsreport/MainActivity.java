@@ -1,23 +1,31 @@
 package com.example.android.newsreport;
 
 import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<List<Report>> {
@@ -34,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
     private String urlRequest = "http://content.guardianapis.com/search?q=football&api-key=fc93e16d-0d30-42cf-a514-41b88adee69d";
 
-    final ReportAdapter adapter = null;
+    private ReportAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +63,9 @@ public class MainActivity extends AppCompatActivity
         lv = (ListView) findViewById(R.id.list_view);
 
 
-        List<Report> reports = QueryUtils.fetchReportData(urlRequest);
+        //List<Report> reports = QueryUtils.fetchReportData(urlRequest);
 
-        final ReportAdapter adapter = new ReportAdapter(this, reports );
+        adapter = new ReportAdapter(this, new ArrayList<Report>());
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -73,7 +81,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.initLoader(1, null, this);
     }
 
     @Override
@@ -100,17 +109,21 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<List<Report>> onCreateLoader(int i, Bundle bundle) {
-        ReportLoader loader = new ReportLoader(this, urlRequest);
-        return loader;
+
+        return new ReportLoader(this, urlRequest);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Report>> loader, List<Report> reports) {
         adapter.clear();
 
-        if(reports != null && !reports.isEmpty()) {
+        if (reports != null && !reports.isEmpty()) {
             adapter.addAll(reports);
         }
+        Log.i("EARTHQUAKES", String.valueOf(reports.get(1).getTitle()));
+        Log.i("EARTHQUAKES", String.valueOf(reports.get(1).getSectionName()));
+        Log.i("EARTHQUAKES", String.valueOf(reports.get(1).getUrl()));
+
     }
 
     @Override

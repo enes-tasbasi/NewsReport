@@ -1,11 +1,12 @@
 package com.example.android.newsreport;
 
+import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
+
 
 import java.util.List;
 
-public class ReportLoader extends AsyncTaskLoader<List<Report>>  {
+public class ReportLoader extends AsyncTaskLoader<List<Report>> {
 
     private static final String LOG_TAG = ReportLoader.class.getName();
 
